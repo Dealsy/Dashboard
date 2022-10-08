@@ -28,18 +28,23 @@ const corsOptions = {
 
 app.post("/send", function (req, res) {
   let mailOptions = {
-    from: "test@gmail.com",
+    from: `${req.body.mailerState.email}`,
     to: process.env.EMAIL,
-    subject: "Nodemailer API",
-    text: "Hi from your nodemailer API",
+    subject: "Reset Link",
+    text: `${process.env.URL || "http://localhost:3000/login/reset"}`,
   };
 
+  console.log(req.body.mailerState.email);
   transporter.sendMail(mailOptions, function (err, data) {
     if (err) {
-      console.log("Error " + err);
+      res.json({
+        status: "fail",
+      });
     } else {
-      console.log("Email sent successfully");
-      res.json({ status: "Email sent" });
+      console.log("== Message Sent ==");
+      res.json({
+        status: "success",
+      });
     }
   });
 });

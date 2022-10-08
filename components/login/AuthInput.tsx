@@ -5,6 +5,7 @@ type AuthInputProps = {
   value?: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   placeholder: string;
+  name?: string;
 };
 
 export default function AuthInput({
@@ -12,6 +13,7 @@ export default function AuthInput({
   value,
   onChange,
   placeholder,
+  name,
 }: AuthInputProps) {
   return (
     <div className="flex flex-row w-full">
@@ -24,6 +26,7 @@ export default function AuthInput({
         value={value}
         onChange={onChange}
         placeholder={placeholder}
+        name={name}
       />
     </div>
   );

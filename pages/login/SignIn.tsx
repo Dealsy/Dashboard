@@ -14,6 +14,18 @@ export default function SignIn() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [isLogin, setIsLogin] = useState(true);
+  const [mailerState, setMailerState] = useState({
+    email: "",
+  });
+
+  console.log(mailerState);
+
+  function handleStateChange(e: any) {
+    setMailerState((prevState) => ({
+      ...prevState,
+      [e.target.name]: e.target.value,
+    }));
+  }
 
   const onChangeUsername = (e: any) => {
     const username = e.target.value;
@@ -49,16 +61,46 @@ export default function SignIn() {
     );
   };
 
+  const submitEmail = async (e: any) => {
+    e.preventDefault();
+    console.log({ mailerState });
+    const response = await fetch("http://localhost:8080/send", {
+      method: "POST",
+      headers: {
+        "Content-type": "application/json",
+        mode: "no-cors",
+      },
+      body: JSON.stringify({ mailerState }),
+    })
+      .then((res) => res.json())
+      .then(async (res) => {
+        const resData = await res;
+        console.log("data", resData);
+        if (resData.status === "success") {
+          alert("Message Sent");
+        } else if (resData.status === "fail") {
+          alert("Message failed to send");
+        }
+      })
+      .then(() => {
+        setMailerState({
+          email: "",
+        });
+      });
+  };
+
   return (
     <div className="flex h-screen bg-gradient-to-b from-indigo-300 via-indigo-400 to-purple-800">
       <LoginCard header={isLogin ? "Sign in" : "Forgot password"}>
-        <form className="flex flex-col w-full gap-2">
+        <form onSubmit={submitEmail} className="flex flex-col w-full gap-2">
           <AuthInput
             placeholder={isLogin ? "Username" : "Enter your email"}
             type={isLogin ? "text" : "email"}
             onChange={(e) => {
-              onChangeUsername(e);
+              isLogin ? onChangeUsername(e) : handleStateChange(e);
             }}
+            name="email"
+            value={mailerState.email}
           />
           {isLogin && (
             <AuthInput
