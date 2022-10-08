@@ -3,6 +3,7 @@ const bodyParser = require("body-parser");
 const nodemailer = require("nodemailer");
 const db = require("./models");
 const Role = db.role;
+
 const cors = require("cors");
 
 require("dotenv").config();
@@ -21,20 +22,27 @@ let transporter = nodemailer.createTransport({
 
 db.sequelize.sync();
 const app = express();
+app.use(express.json());
 
 const corsOptions = {
   origin: "http://localhost:3000",
 };
+app.use(cors());
+
+transporter.verify((err, success) => {
+  err
+    ? console.log(err)
+    : console.log(`=== Server is ready to take messages: ${success} ===`);
+});
 
 app.post("/send", function (req, res) {
   let mailOptions = {
-    from: `${req.body.mailerState.email}`,
-    to: process.env.EMAIL,
+    from: process.env.EMAIL,
+    to: `${req.body.mailerState.email}`,
     subject: "Reset Link",
     text: `${process.env.URL || "http://localhost:3000/login/reset"}`,
   };
 
-  console.log(req.body.mailerState.email);
   transporter.sendMail(mailOptions, function (err, data) {
     if (err) {
       res.json({

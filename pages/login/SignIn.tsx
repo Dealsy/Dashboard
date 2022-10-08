@@ -18,7 +18,7 @@ export default function SignIn() {
     email: "",
   });
 
-  console.log(mailerState);
+  console.log("state", mailerState);
 
   function handleStateChange(e: any) {
     setMailerState((prevState) => ({
@@ -63,7 +63,6 @@ export default function SignIn() {
 
   const submitEmail = async (e: any) => {
     e.preventDefault();
-    console.log({ mailerState });
     const response = await fetch("http://localhost:8080/send", {
       method: "POST",
       headers: {
@@ -75,7 +74,7 @@ export default function SignIn() {
       .then((res) => res.json())
       .then(async (res) => {
         const resData = await res;
-        console.log("data", resData);
+
         if (resData.status === "success") {
           alert("Message Sent");
         } else if (resData.status === "fail") {
