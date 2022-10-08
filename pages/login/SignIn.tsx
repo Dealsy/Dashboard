@@ -79,7 +79,7 @@ export default function SignIn() {
             {isLogin && (
               <AuthLink
                 text="Don't have an account?"
-                linkText="Sign Up"
+                linkText="Sign up"
                 hrefPath="Register"
                 className="mt-5"
               />
@@ -113,7 +113,7 @@ export default function SignIn() {
               {isLogin && (
                 <Button
                   onClick={() => setIsLogin(false)}
-                  className=" text-indigo-400 text-sm border-0 w-32"
+                  className="text-indigo-400 text-sm border-0 w-32"
                   text="Forgot password?"
                   type="button"
                 />

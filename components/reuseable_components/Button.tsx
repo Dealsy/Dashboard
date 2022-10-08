@@ -15,10 +15,7 @@ export default function Button({
 }: buttonProps) {
   return (
     <button
-      className={clsx(
-        "border-2 border-gray-200 text-center p-2 rounded-md",
-        className
-      )}
+      className={clsx("text-center p-2 rounded-md", className)}
       type={type || "submit"}
       onClick={onClick}
     >

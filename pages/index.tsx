@@ -24,9 +24,7 @@ const Home: NextPage = ({ data }: any) => {
       </Head>
 
       <main>
-        <div className="bg-gray-50 flex justify-center h-screen">
-          <Dashboard />
-        </div>
+        <Dashboard />
       </main>
     </div>
   );
