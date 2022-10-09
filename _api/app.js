@@ -40,7 +40,10 @@ app.post("/send", function (req, res) {
     from: process.env.EMAIL,
     to: `${req.body.mailerState.email}`,
     subject: "Reset Link",
-    text: `${process.env.URL || "http://localhost:3000/login/ResetPassword"}`,
+    text: `${
+      process.env.URL ||
+      `http://localhost:3000/login/ResetPassword?${req.body.mailerState.email}`
+    }`,
   };
 
   transporter.sendMail(mailOptions, function (err, data) {

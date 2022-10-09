@@ -85,3 +85,33 @@ exports.signin = (req, res) => {
       res.status(500).send({ message: err.message });
     });
 };
+
+// Reset Password
+exports.resetPassword = (req, res) => {
+  User.update(
+    {
+      password: bcrypt.hashSync(req.body.password, 8),
+    },
+    {
+      where: {
+        email: req.body.email,
+      },
+    }
+  )
+    .then((user) => {
+      if (user == 1) {
+        res.send({
+          message: "Password was reset successfully.",
+        });
+      } else {
+        res.send({
+          message: `Cannot reset password with email=${req.body.email}. Maybe User was not found or req.body is empty!`,
+        });
+      }
+    })
+    .catch((err) => {
+      res.status(500).send({
+        message: "Error updating User with email=" + req.body.email,
+      });
+    });
+};

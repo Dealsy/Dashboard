@@ -9,9 +9,10 @@ const register = (username, email, password) => {
   });
 };
 
-const forgotPassword = (email) => {
-  return axios.post(API_URL + "forgot-password", {
+const resetPassword = (email, password) => {
+  return axios.post(API_URL + "reset-password", {
     email,
+    password,
   });
 };
 
@@ -45,6 +46,7 @@ const AuthService = {
   login,
   logout,
   getCurrentUser,
+  resetPassword,
 };
 
 export default AuthService;
