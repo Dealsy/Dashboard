@@ -105,7 +105,7 @@ export default function Register() {
           <div className="flex flex-col justify-center">
             <Button
               text="Register"
-              className="bg-indigo-500 text-white w-full hover:bg-indigo-600"
+              className="btn-blue"
               onClick={(e) => {
                 handleRegister(e);
               }}

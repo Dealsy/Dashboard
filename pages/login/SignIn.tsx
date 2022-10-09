@@ -13,19 +13,23 @@ export default function SignIn() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
+  const [forgotEmailStatus, setForgotEmailStatus] = useState("");
   const [isLogin, setIsLogin] = useState(true);
   const [mailerState, setMailerState] = useState({
     email: "",
   });
 
-  console.log("state", mailerState);
+  const backToLogin = () => {
+    setIsLogin(true);
+    setForgotEmailStatus("");
+    setUsername("");
+    setMailerState({ email: "" });
+  };
 
-  function handleStateChange(e: any) {
-    setMailerState((prevState) => ({
-      ...prevState,
-      [e.target.name]: e.target.value,
-    }));
-  }
+  const handleStateChange = (e: any) => {
+    const email = e.target.value;
+    setMailerState({ email });
+  };
 
   const onChangeUsername = (e: any) => {
     const username = e.target.value;
@@ -63,29 +67,25 @@ export default function SignIn() {
 
   const submitEmail = async (e: any) => {
     e.preventDefault();
+    setLoading(true);
     const response = await fetch("http://localhost:8080/send", {
       method: "POST",
       headers: {
         "Content-type": "application/json",
-        mode: "no-cors",
       },
       body: JSON.stringify({ mailerState }),
     })
       .then((res) => res.json())
       .then(async (res) => {
         const resData = await res;
-
-        if (resData.status === "success") {
-          alert("Message Sent");
-        } else if (resData.status === "fail") {
-          alert("Message failed to send");
-        }
+        setForgotEmailStatus(resData.status);
       })
       .then(() => {
         setMailerState({
           email: "",
         });
       });
+    setLoading(false);
   };
 
   return (
@@ -98,8 +98,7 @@ export default function SignIn() {
             onChange={(e) => {
               isLogin ? onChangeUsername(e) : handleStateChange(e);
             }}
-            name="email"
-            value={mailerState.email}
+            value={isLogin ? username : mailerState.email}
           />
           {isLogin && (
             <AuthInput
@@ -110,10 +109,22 @@ export default function SignIn() {
               }}
             />
           )}
-          {message && (
-            <p className="text-red-500 text-center">
+          {isLogin
+            ? message && (
+                <p className="text-center text-red-700 bg-red-200 p-2">
+                  Username or Password is wrong
+                </p>
+              )
+            : forgotEmailStatus === "fail" && (
+                <p className="text-red-700 bg-red-200 p-2 text-center">
+                  You must enter a vaild email
+                </p>
+              )}
+
+          {forgotEmailStatus === "success" && (
+            <p className="text-green-700 bg-green-200 p-2 text-center ">
               {" "}
-              Username or Password is wrong
+              Email has been sent!
             </p>
           )}
           <div className="flex flex-col justify-center">
@@ -122,13 +133,13 @@ export default function SignIn() {
                 text="Don't have an account?"
                 linkText="Sign up"
                 hrefPath="Register"
-                className="mt-5"
+                className="mt-5 mb-1"
               />
             )}
             {isLogin && (
               <Button
                 text="Sign in"
-                className="bg-indigo-500 text-white w-full  hover:bg-indigo-600"
+                className="btn-blue"
                 onClick={(e) => {
                   handleLogin(e);
                 }}
@@ -136,8 +147,8 @@ export default function SignIn() {
             )}
             {!isLogin && (
               <Button
-                text="Send password reset link"
-                className="bg-indigo-500 text-white w-full  hover:bg-indigo-600"
+                text={loading ? "sending email..." : "Send password reset link"}
+                className="btn-blue"
                 onClick={() => {}}
               />
             )}
@@ -145,7 +156,7 @@ export default function SignIn() {
             <div className="flex justify-end">
               {!isLogin && (
                 <Button
-                  onClick={() => setIsLogin(true)}
+                  onClick={backToLogin}
                   className="text-indigo-400 text-sm border-0"
                   text="Back to login"
                   type="button"
