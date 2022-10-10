@@ -1,10 +1,9 @@
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
 
-import SignIn from '../pages/login/SignIn'
+import { UserProvider } from '../hooks/UseUser'
 import AuthService from '../services/auth.service'
 import Nav from './Nav/nav'
-import PageLoader from './loaders/pageLoader'
 
 type Props = {
   children: React.ReactNode
@@ -34,8 +33,10 @@ export default function Layout({ children }: Props) {
   return (
     <>
       <main className="flex flex-col bg-gray-50 h-screen">
-        <Nav />
-        <div className="w-full">{children}</div>
+        <UserProvider>
+          <Nav />
+          <div className="w-full">{children}</div>
+        </UserProvider>
       </main>
     </>
   )

@@ -4,6 +4,8 @@ import MenuItem from './MenuItem'
 export default function Nav() {
   const user = useUser()
 
+  console.log(user)
+
   return (
     <>
       <nav className="flex items-center justify-between bg-gray-800 p-6 text-white">

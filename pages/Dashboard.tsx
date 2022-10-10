@@ -31,14 +31,18 @@ export default function Dashboard() {
   return (
     <div className="flex flex-wrap flex-row justify-between m-10">
       <Card header="Personal Details">
-        <ul>
-          <li>Username: {user.username}</li>
-          <li>Email: {user.email}</li>
+        <div className="flex flex-col">
+          <ul>
+            <li>Username: {user.username}</li>
+            <li>Email: {user.email}</li>
+          </ul>
           <h3 className="flex justify-center font-medium mt-2"> Roles: </h3>
-          <li>{userRole && userRole}</li>
-          <li>{adminRole && adminRole}</li>
-          <li>{modRole && modRole}</li>
-        </ul>
+          <div className="flex flex-row gap-2">
+            <p>{adminRole && adminRole}</p>
+            <p>{modRole && modRole}</p>
+            <p>{userRole && userRole}</p>
+          </div>
+        </div>
       </Card>
     </div>
   )
