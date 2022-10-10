@@ -2,6 +2,8 @@ import { useRouter } from "next/router";
 import { useEffect } from "react";
 import SignIn from "../pages/login/SignIn";
 import AuthService from "../services/auth.service";
+import PageLoader from "./loaders/pageLoader";
+import Nav from "./Nav/nav";
 
 type Props = {
   children: React.ReactNode;
@@ -30,7 +32,8 @@ export default function Layout({ children }: Props) {
 
   return (
     <>
-      <main className="flex bg-gray-50">
+      <main className="flex flex-col bg-gray-50">
+        <Nav />
         <div className="w-full">{children}</div>
       </main>
     </>

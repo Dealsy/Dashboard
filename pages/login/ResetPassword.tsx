@@ -32,22 +32,29 @@ export default function ResetPassword() {
   // Calls resetPassword() in auth.service.ts
   const handleResetPassword = async (e: any) => {
     e.preventDefault();
-    AuthService.resetPassword(email, password).then(
-      () => {
-        setMessage("Password reset successfully!");
-      },
-      (error) => {
-        const resMessage =
-          (error.response &&
-            error.response.data &&
-            error.response.data.message) ||
-          error.message ||
-          error.toString();
 
-        setLoading(false);
-        setMessage(resMessage);
-      }
-    );
+    if (password === "" || confirmPassword === "") {
+      setMessage("fail");
+    } else if (password !== "" && confirmPassword !== "") {
+      AuthService.resetPassword(email, password).then(
+        () => {
+          setMessage("success");
+        },
+        (error) => {
+          const resMessage =
+            (error.response &&
+              error.response.data &&
+              error.response.data.message) ||
+            error.message ||
+            error.toString();
+
+          console.log(error.response);
+
+          setLoading(false);
+          setMessage(resMessage);
+        }
+      );
+    }
   };
 
   return (
@@ -59,11 +66,19 @@ export default function ResetPassword() {
             <p className="text-gray-400">{email}</p>
           </div>
           <AuthInput onChange={onChangePassword} placeholder="New password" />
+          {message && password === "" && (
+            <p className="error"> Please enter a password </p>
+          )}
           <AuthInput
             onChange={onPasswordConfirm}
             placeholder="Confirm new password"
           />
-          {message}
+          {message && confirmPassword === "" && (
+            <p className="error mb-2"> Please confirm your password </p>
+          )}
+          {message === "success" && (
+            <p className="success">Password reset successfully</p>
+          )}
           <Button
             onClick={handleResetPassword}
             text="Reset password"

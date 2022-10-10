@@ -110,22 +110,13 @@ export default function SignIn() {
             />
           )}
           {isLogin
-            ? message && (
-                <p className="text-center text-red-700 bg-red-200 p-2">
-                  Username or Password is wrong
-                </p>
-              )
+            ? message && <p className="danger">Username or Password is wrong</p>
             : forgotEmailStatus === "fail" && (
-                <p className="text-red-700 bg-red-200 p-2 text-center">
-                  You must enter a vaild email
-                </p>
+                <p className="danger">You must enter a vaild email</p>
               )}
 
           {forgotEmailStatus === "success" && (
-            <p className="text-green-700 bg-green-200 p-2 text-center ">
-              {" "}
-              Email has been sent!
-            </p>
+            <p className="success">Email has been sent!</p>
           )}
           <div className="flex flex-col justify-center">
             {isLogin && (

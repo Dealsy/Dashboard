@@ -73,9 +73,7 @@ export default function Register() {
             }}
           />
           {username === ""
-            ? message && (
-                <p className="text-red-500 ml-3">Username is required</p>
-              )
+            ? message && <p className="error">Username is required</p>
             : null}
 
           <AuthInput
@@ -86,7 +84,7 @@ export default function Register() {
             }}
           />
           {email === ""
-            ? message && <p className="text-red-500 ml-3">Email is required</p>
+            ? message && <p className="error">Email is required</p>
             : null}
           <AuthInput
             placeholder="Password"
@@ -97,9 +95,7 @@ export default function Register() {
           />
 
           {password === ""
-            ? message && (
-                <p className="text-red-500 ml-3">Pasword is required</p>
-              )
+            ? message && <p className="error">Pasword is required</p>
             : null}
 
           <div className="flex flex-col justify-center">
