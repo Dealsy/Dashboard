@@ -30,7 +30,7 @@ export default function Dashboard() {
 
   return (
     <div className="flex flex-wrap flex-row justify-between m-10">
-      <Card header="Personal Details">
+      <Card className="bg-green-500 p-5" header="Personal Details">
         <div className="flex flex-col">
           <ul>
             <li>Username: {user.username}</li>
