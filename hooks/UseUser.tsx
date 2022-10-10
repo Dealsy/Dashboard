@@ -1,46 +1,46 @@
 // Hooks/UseUser.jsx
+import { useRouter } from 'next/router'
+import React, { createContext, useContext, useEffect, useState } from 'react'
 
-import React, { createContext, useContext, useEffect, useState } from "react";
-import AuthService from "../services/auth.service";
-import { useRouter } from "next/router";
+import AuthService from '../services/auth.service'
 
 interface Props {
-  username: string;
-  accessToken: string;
-  id: string;
-  email: string;
-  roles: string[];
+  username: string
+  accessToken: string
+  id: string
+  email: string
+  roles: string[]
 }
 
 type UserContextType = {
-  children: React.ReactNode;
-};
+  children: React.ReactNode
+}
 
 const initialUser = {
-  username: "",
-  accessToken: "",
-  id: "",
-  email: "",
+  username: '',
+  accessToken: '',
+  id: '',
+  email: '',
   roles: [],
-};
+}
 
-const UserContext = createContext<Props | undefined>(initialUser);
+const UserContext = createContext<Props | undefined>(initialUser)
 
 export function UserProvider({ children }: UserContextType) {
-  const router = useRouter();
-  const [currentUser, setCurrentUser] = useState<Props>();
+  const router = useRouter()
+  const [currentUser, setCurrentUser] = useState<Props>()
 
   useEffect(() => {
-    const user: Props = AuthService.getCurrentUser();
+    const user: Props = AuthService.getCurrentUser()
     if (!user) {
-      router.push("/login/SignIn");
+      router.push('/login/SignIn')
     }
-    setCurrentUser(user);
-  }, [router]);
+    setCurrentUser(user)
+  }, [router])
 
   return (
     <UserContext.Provider value={currentUser}>{children}</UserContext.Provider>
-  );
+  )
 }
 
-export const useUser = () => useContext(UserContext);
+export const useUser = () => useContext(UserContext)
