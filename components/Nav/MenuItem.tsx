@@ -62,13 +62,13 @@ export default function MenuItem() {
             <Menu.Item>
               {({ active }) => (
                 <a
-                  href="#"
+                  href="/Profile"
                   className={clsx(
                     active && 'bg-gray-100',
                     'block px-4 py-2 text-sm text-gray-700'
                   )}
                 >
-                  Change password
+                  Profile settings
                 </a>
               )}
             </Menu.Item>
@@ -78,7 +78,7 @@ export default function MenuItem() {
                   href="#"
                   className={clsx(
                     active && 'bg-gray-100',
-                    'block px-4 py-2 text-sm text-gray-700'
+                    'block px-4 py-2 text-sm text-red-500'
                   )}
                   onClick={logOut}
                 >

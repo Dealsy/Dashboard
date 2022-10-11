@@ -9,6 +9,9 @@
     .btn-blue{
         @apply bg-indigo-500 text-white w-full hover:bg-indigo-600;
     }
+    .btn-black{
+        @apply bg-gray-800 text-white w-full hover:bg-gray-900;
+    }
 
     /* Warnings */
 

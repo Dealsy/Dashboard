@@ -22,9 +22,6 @@ export default function Layout({ children }: Props) {
     }
   }, [router, publicPath])
 
-  // Will require the user to be authenticated if not public
-  // const { ready, user, isLoggedIn } = useAuth(!publicPath)
-
   if (publicPath) {
     // Using fragment to please the linter
     return <>{children}</>
