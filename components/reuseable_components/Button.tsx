@@ -1,5 +1,4 @@
 import clsx from 'clsx'
-import Link from 'next/link'
 
 type buttonProps = {
   text: string
@@ -14,19 +13,16 @@ export default function Button({
   className,
   onClick,
   type,
-  href,
 }: buttonProps) {
   return (
-    <Link href={`/${href}`}>
-      <a>
-        <button
-          className={clsx('text-center p-2 rounded-md', className)}
-          type={type || 'submit'}
-          onClick={onClick}
-        >
-          {text}
-        </button>
-      </a>
-    </Link>
+    <a>
+      <button
+        className={clsx('text-center p-2 rounded-md', className)}
+        type={type || 'submit'}
+        onClick={onClick}
+      >
+        {text}
+      </button>
+    </a>
   )
 }

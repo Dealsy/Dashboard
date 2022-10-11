@@ -16,9 +16,7 @@ export default function Profile() {
   const [logoSizeError, setLogoSizeError] = useState(false)
   const [logoError, setLogoError] = useState(false)
 
-  const handleChange = (logo: any) => {
-    console.log(logo)
-  }
+  const handleChange = (logo: any) => {}
 
   return (
     <div>

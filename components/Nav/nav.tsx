@@ -23,9 +23,16 @@ export default function Nav() {
               </div>
             </a>
           </Link>
-          <Button text="Todo app" className="btn-black" href="/Todo" />
-          <Button text="Budget app" className="btn-black" href="/Budget" />
-          <Button text="Calculator" className="btn-black" href="/Calculator" />
+
+          <Link href="/Todo">
+            <a className="btn-black text-center p-2 rounded-md">Todo</a>
+          </Link>
+          <Link href="/Budget">
+            <a className="btn-black text-center p-2 rounded-md">Budget</a>
+          </Link>
+          <Link href="/Calculator">
+            <a className="btn-black text-center p-2 rounded-md">Calculator</a>
+          </Link>
         </div>
         <MenuItem />
       </nav>
