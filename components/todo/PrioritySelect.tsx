@@ -1,4 +1,4 @@
-import { XCircleIcon } from '@heroicons/react/24/outline'
+import { Bars3Icon, XCircleIcon } from '@heroicons/react/24/outline'
 import clsx from 'clsx'
 import { memo } from 'react'
 import { useDrag, useDrop } from 'react-dnd'
@@ -91,6 +91,7 @@ export function PrioritySelect({
           'border-b-2 border-gray-300 m-10 p-5 flex flex-row justify-between'
         )}
       >
+        <Bars3Icon className="w-7 h-7 mt-3 cursor-pointer" />
         <Input
           onChange={onChange}
           value={input}
