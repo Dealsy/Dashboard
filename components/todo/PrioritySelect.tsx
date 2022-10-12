@@ -14,7 +14,7 @@ import {
 import { ItemTypes } from '../../types/itemTypes'
 
 type PrioritySelectProps = {
-  removeTodo: () => void
+  setTodoItems: (todoItems: any) => void
   onChange: (e: any) => void
   input: string
   findTodo: (id: string) => void
@@ -22,6 +22,10 @@ type PrioritySelectProps = {
   id: string
   colourOptions: any
   ColourOptionsStatus: any
+  item: any
+  setOpen: (open: boolean) => void
+  handleChange: (colourOptions: any) => void
+  todo: any
 }
 
 interface Item {
@@ -31,13 +35,17 @@ interface Item {
 
 export function PrioritySelect({
   id,
-  removeTodo,
+  setTodoItems,
   input,
   onChange,
   moveTodo,
   findTodo,
   ColourOptionsStatus,
   colourOptions,
+  item,
+  setOpen,
+  handleChange,
+  todo,
 }: PrioritySelectProps) {
   // @ts-ignore
   const originalIndex: number = findTodo(id).index
@@ -73,15 +81,13 @@ export function PrioritySelect({
     [findTodo, moveTodo]
   )
 
-  const opacity = isDragging ? 0 : 1
-
   return (
     <>
       <div
         ref={(node) => drag(drop(node))}
-        style={{ opacity }}
         className={clsx(
-          'border-b-2 border-gray-300 m-10 p-5 flex flex-row justify-between'
+          'border-b-2 border-gray-300 m-10 p-5 flex flex-row justify-between',
+          isDragging ? 'bg-gray-200 p-10 shadow-2xl' : 'bg-white'
         )}
       >
         <Bars3Icon className="w-7 h-7 mt-3 cursor-pointer" />
@@ -95,6 +101,8 @@ export function PrioritySelect({
           defaultValue={colourOptions[1]}
           options={colourOptions}
           styles={colourStyles}
+          onChange={handleChange}
+          value={colourOptions.find((obj: any) => obj.value === todo)}
         />
 
         <Select
@@ -107,7 +115,10 @@ export function PrioritySelect({
           text="Remove"
           className="btn-red_text hover:bg-red-100"
           LeftImage={XCircleIcon}
-          onClick={removeTodo}
+          onClick={() => {
+            setTodoItems(item)
+            setOpen(true)
+          }}
         />
       </div>
     </>
