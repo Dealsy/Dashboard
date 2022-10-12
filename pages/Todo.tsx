@@ -4,6 +4,7 @@ import { memo, useCallback, useState } from 'react'
 import { useDrop } from 'react-dnd'
 import { v4 as uuidv4 } from 'uuid'
 
+import { ColourOption } from '../../types/types'
 import Button from '../components/reuseable_components/Button'
 import { PrioritySelect } from '../components/todo/PrioritySelect'
 import { clone } from '../helpers/clone'
@@ -20,7 +21,18 @@ export default function Todo() {
   const id = uuidv4()
 
   const [todo, setTodo] = useState<toDo[]>([])
-  const [input, setInput] = useState('')
+
+  const colourOptions: readonly ColourOption[] = [
+    { value: 'red', label: 'High Priority', color: '#FF5630', isFixed: true },
+    { value: 'yellow', label: 'Medium Priority', color: '#FFC400' },
+    { value: 'green', label: 'low Priority', color: '#36B37E' },
+  ]
+
+  const ColourOptionsStatus: readonly ColourOption[] = [
+    { value: 'red', label: 'Not Started', color: '#FF5630', isFixed: true },
+    { value: 'blue', label: 'in Progress', color: '#0052CC' },
+    { value: 'green', label: 'Completed', color: '#36B37E' },
+  ]
 
   console.log(todo)
 
@@ -98,6 +110,8 @@ export default function Todo() {
           <PrioritySelect
             id={`${item.id}`}
             key={item.id}
+            colourOptions={colourOptions}
+            ColourOptionsStatus={ColourOptionsStatus}
             moveTodo={moveTodo}
             findTodo={findTodo}
             removeTodo={() => removeTodo(item.id)}
@@ -111,9 +125,6 @@ export default function Todo() {
               if (!val) return
               // Update
               val.input = e.target.value
-              console.log('New TODO', newTodos)
-              console.log('vale', val)
-              console.log('vale res', val.response)
               setTodo(newTodos)
             }}
           />

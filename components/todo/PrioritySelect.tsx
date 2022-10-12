@@ -12,7 +12,6 @@ import {
   dot,
 } from '../../hooks/ColourOptions'
 import { ItemTypes } from '../../types/itemTypes'
-import { ColourOption } from '../../types/types'
 
 type PrioritySelectProps = {
   removeTodo: () => void
@@ -21,6 +20,8 @@ type PrioritySelectProps = {
   findTodo: (id: string) => void
   moveTodo: (id: string, atIndex: number) => void
   id: string
+  colourOptions: any
+  ColourOptionsStatus: any
 }
 
 interface Item {
@@ -35,8 +36,11 @@ export function PrioritySelect({
   onChange,
   moveTodo,
   findTodo,
+  ColourOptionsStatus,
+  colourOptions,
 }: PrioritySelectProps) {
-  const originalIndex: Item = findTodo(id).index
+  // @ts-ignore
+  const originalIndex: number = findTodo(id).index
   const [{ isDragging }, drag, dragPreview] = useDrag(
     () => ({
       type: ItemTypes.CARD,
@@ -60,6 +64,7 @@ export function PrioritySelect({
       accept: ItemTypes.CARD,
       hover({ id: draggedId }: Item) {
         if (draggedId !== id) {
+          // @ts-ignore
           const { index: overIndex } = findTodo(id)
           moveTodo(draggedId, overIndex)
         }
@@ -69,18 +74,6 @@ export function PrioritySelect({
   )
 
   const opacity = isDragging ? 0 : 1
-
-  const colourOptions: readonly ColourOption[] = [
-    { value: 'red', label: 'High Priority', color: '#FF5630', isFixed: true },
-    { value: 'yellow', label: 'Medium Priority', color: '#FFC400' },
-    { value: 'green', label: 'low Priority', color: '#36B37E' },
-  ]
-
-  const ColourOptionsStatus: readonly ColourOption[] = [
-    { value: 'red', label: 'Not Started', color: '#FF5630', isFixed: true },
-    { value: 'blue', label: 'in Progress', color: '#0052CC' },
-    { value: 'green', label: 'Completed', color: '#36B37E' },
-  ]
 
   return (
     <>
@@ -99,13 +92,13 @@ export function PrioritySelect({
           placeholder="Write a todo item"
         />
         <Select
-          defaultValue={colourOptions[2]}
+          defaultValue={colourOptions[1]}
           options={colourOptions}
           styles={colourStyles}
         />
 
         <Select
-          defaultValue={ColourOptionsStatus[2]}
+          defaultValue={ColourOptionsStatus[0]}
           options={ColourOptionsStatus}
           styles={colourStatusStyles}
         />
