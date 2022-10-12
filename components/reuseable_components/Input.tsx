@@ -20,7 +20,7 @@ export default function Input({
   className,
 }: InputProps) {
   return (
-    <div className="flex flex-row w-full">
+    <div className="flex flex-row">
       <input
         id={id}
         className={clsx(

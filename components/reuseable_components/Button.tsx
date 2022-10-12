@@ -6,6 +6,8 @@ type buttonProps = {
   onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void
   type?: 'button' | 'submit' | 'reset' | undefined
   href?: string
+  RightImage?: any
+  LeftImage?: any
 }
 
 export default function Button({
@@ -13,6 +15,8 @@ export default function Button({
   className,
   onClick,
   type,
+  RightImage,
+  LeftImage,
 }: buttonProps) {
   return (
     <a>
@@ -21,7 +25,11 @@ export default function Button({
         type={type || 'submit'}
         onClick={onClick}
       >
-        {text}
+        <div className="flex flex-row">
+          {RightImage && <RightImage className="w-6 h-6 mr-2" />}
+          <span>{text}</span>
+          {LeftImage && <LeftImage className="w-6 h-6  ml-2" />}
+        </div>
       </button>
     </a>
   )

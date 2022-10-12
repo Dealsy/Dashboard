@@ -1,7 +1,6 @@
 import Link from 'next/link'
 
 import { useUser } from '../../hooks/UseUser'
-import Button from '../reuseable_components/Button'
 import MenuItem from './MenuItem'
 
 export default function Nav() {
@@ -34,7 +33,12 @@ export default function Nav() {
             <a className="btn-black text-center p-2 rounded-md">Calculator</a>
           </Link>
         </div>
-        <MenuItem />
+        <div className="flex flex-row">
+          <Link href="/Blog">
+            <a className="mt-2 mr-5">Blog</a>
+          </Link>
+          <MenuItem />
+        </div>
       </nav>
       <div className=" bg-gray-700 text-white p-4">
         <div className="mb-5 text-2xl pt-2">Welcome {user?.username} </div>
