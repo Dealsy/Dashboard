@@ -4,11 +4,11 @@ import { memo, useCallback, useState } from 'react'
 import { useDrop } from 'react-dnd'
 import { v4 as uuidv4 } from 'uuid'
 
-import { ColourOption } from '../../types/types'
 import Button from '../components/reuseable_components/Button'
 import { PrioritySelect } from '../components/todo/PrioritySelect'
 import { clone } from '../helpers/clone'
 import { ItemTypes } from '../types/itemTypes'
+import { ColourOption } from '../types/types'
 
 type toDo = {
   id: string
