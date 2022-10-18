@@ -15,6 +15,12 @@
     "jsx": "preserve",
     "incremental": true
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "_api/controllers/todo.controller.js",
+    "_api/models/todo.model.js"
+  ],
   "exclude": ["node_modules"]
 }

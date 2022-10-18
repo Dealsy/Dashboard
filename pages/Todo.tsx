@@ -1,4 +1,4 @@
-import { PlusCircleIcon } from '@heroicons/react/24/outline'
+import { PlusCircleIcon, XCircleIcon } from '@heroicons/react/24/outline'
 import update from 'immutability-helper'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useDrop } from 'react-dnd'
@@ -36,6 +36,7 @@ export default function Todo() {
   const [todos, setTodos] = useState<toDo[]>([])
   const [todo, setTodo] = useState<string>()
   const [open, setOpen] = useState(false)
+  const [openRemoveAll, setOpenRemoveAll] = useState(false)
   const [todoItems, setTodoItems] = useState<any>([])
   const [priority, setPriority] = useState(colourOptions[1].label)
   const [status, setStatus] = useState(ColourOptionsStatus[0].label)
@@ -60,6 +61,19 @@ export default function Todo() {
     setTodos(newTodo)
   }
 
+  // adds todos from state to database
+  // const addTodoToApi = async () => {
+  //   const response = await fetch('http://localhost:3000/api/todo', {
+  //     method: 'POST',
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //     },
+  //     body: JSON.stringify(todos),
+  //   })
+  //   const data = await response.json()
+  //   console.log('data', data)
+  // }
+
   // addtodo
   const addTodo = useCallback(
     (e: any) => {
@@ -78,23 +92,54 @@ export default function Todo() {
     [todo, priority, status, todos, id]
   )
 
-  const addTodoToApi = async () => {
-    const response = await fetch('http://localhost:3000/api/todo', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(todos),
-    })
-    const data = await response.json()
-    console.log(data)
+  // Post todos to database on change of todos after 1 second
+  // useEffect(() => {
+  //   const postData = async () => {
+  //     const response = await fetch('http://localhost:3000/api/todo', {
+  //       method: 'PUT',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify(todos),
+  //     })
+  //     const data = await response.json()
+  //     console.log(data)
+  //   }
+  //   const timeout = setTimeout(() => {
+  //     postData()
+  //   }, 1000)
+  //   return () => clearTimeout(timeout)
+  // }, [todos])
+
+  // deletes all todos from database
+  // const deleteAllTodos = async () => {
+  //   const response = await fetch('http://localhost:3000/api/todo', {
+  //     method: 'DELETE',
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //     },
+  //   })
+  //   const data = await response.json()
+  //   console.log(data)
+  // }
+
+  // removes all todos from array
+  const removeAllTodos = () => {
+    setTodos([])
+    setOpenRemoveAll(false)
   }
 
   // Removes a todo item
   const removeTodo = (id: string) => {
     const newValues = todos.filter((i) => i.id !== id)
     setTodos(newValues)
+    setTodoItems([])
     setOpen(false)
+  }
+
+  const cancleRemove = () => {
+    setOpen(false)
+    setTodoItems([])
   }
 
   // Drag and drop code
@@ -151,10 +196,10 @@ export default function Todo() {
         </div>
 
         <Button
-          text="Save todo list"
-          className="btn-blue mb-1 p-3"
-          RightImage={PlusCircleIcon}
-          onClick={addTodo}
+          text="Delete all todos"
+          className="btn-red mb-1 p-2 font-medium shadow-md hover:bg-red-700"
+          RightImage={XCircleIcon}
+          onClick={() => setOpenRemoveAll(true)}
         />
       </div>
       <div ref={drop}>
@@ -181,13 +226,18 @@ export default function Todo() {
               // Make sure it exists
               if (!val) return
               // Update
-
               val.input = e.target.value
-
               setTodos(newTodos)
             }}
           />
         ))}
+
+        {todos.length === 0 && (
+          <p className="flex justify-center mt-24 text-gray-300 text-7xl">
+            {' '}
+            Create a new todo to fill this space!{' '}
+          </p>
+        )}
       </div>
 
       <RemoveModal
@@ -199,9 +249,24 @@ export default function Todo() {
         }
         description_two="This action cannot be undone."
         open={open}
-        setOpen={setOpen}
+        setOpen={cancleRemove}
         removeTodo={removeTodo}
         todoItems={todoItems}
+      />
+
+      <RemoveModal
+        title="Remove all Todo Items"
+        description={
+          todos.length > 0
+            ? `This will remove all ${todos.length} todo items. Are you sure you want to continue?`
+            : 'There are no items to remove'
+        }
+        description_two="This action cannot be undone."
+        open={openRemoveAll}
+        setOpen={setOpenRemoveAll}
+        removeTodo={removeAllTodos}
+        todoItems={todoItems}
+        disabled={todos.length === 0}
       />
     </div>
   )

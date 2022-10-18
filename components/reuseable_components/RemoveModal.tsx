@@ -1,5 +1,6 @@
 import { Dialog, Transition } from '@headlessui/react'
 import { ExclamationTriangleIcon, XMarkIcon } from '@heroicons/react/24/outline'
+import clsx from 'clsx'
 import { Fragment, useState } from 'react'
 
 type RemoveModalProps = {
@@ -9,7 +10,8 @@ type RemoveModalProps = {
   description_two?: string
   open: boolean
   setOpen: (open: boolean) => void
-  todoItems: any
+  todoItems?: any
+  disabled?: boolean
 }
 
 export default function Example({
@@ -20,6 +22,7 @@ export default function Example({
   todoItems,
   open,
   setOpen,
+  disabled,
 }: RemoveModalProps) {
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -77,9 +80,9 @@ export default function Example({
                         {description}
                       </span>
                       <span className="terxt-gray-700 font-medium">
-                        {todoItems.input}
+                        {todoItems?.input}
                       </span>
-                      {todoItems.input && '?'}
+                      {todoItems?.input && '?'}
                       <p className="text-sm text-gray-500 mt-1">
                         {description_two}
                       </p>
@@ -88,15 +91,26 @@ export default function Example({
                 </div>
                 <div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
                   <button
+                    disabled={disabled}
                     type="button"
-                    className="inline-flex w-full justify-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm"
+                    className={clsx(
+                      disabled
+                        ? 'bg-red-500 opacity-25 hover:bg-red-500'
+                        : 'inline-flex w-full justify-center rounded-md border border-transparent bg-red-600',
+                      'px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-red-700',
+                      'focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm'
+                    )}
                     onClick={() => removeTodo(todoItems.id)}
                   >
                     Remove
                   </button>
                   <button
                     type="button"
-                    className="mt-3 inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-base font-medium text-gray-700 shadow-sm hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:mt-0 sm:w-auto sm:text-sm"
+                    className={clsx(
+                      'mt-3 inline-flex w-full justify-center rounded-md border border-gray-300',
+                      'bg-white px-4 py-2 text-base font-medium text-gray-700 shadow-sm hover:text-gray-500',
+                      'focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:mt-0 sm:w-auto sm:text-sm'
+                    )}
                     onClick={() => setOpen(false)}
                   >
                     Cancel

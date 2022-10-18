@@ -26,9 +26,9 @@ export default function Button({
         onClick={onClick}
       >
         <div className="flex flex-row">
-          {RightImage && <RightImage className="w-6 h-6 mr-2" />}
+          {RightImage && <RightImage className="w-6 h-6 mr-2 font-medium" />}
           <span>{text}</span>
-          {LeftImage && <LeftImage className="w-6 h-6  ml-2" />}
+          {LeftImage && <LeftImage className="w-6 h-6 ml-2 font-medium" />}
         </div>
       </button>
     </a>
