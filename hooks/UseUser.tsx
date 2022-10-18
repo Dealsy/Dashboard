@@ -31,11 +31,16 @@ export function UserProvider({ children }: UserContextType) {
   const [currentUser, setCurrentUser] = useState<Props>()
 
   useEffect(() => {
+    const controller = new AbortController()
     const user: Props = AuthService.getCurrentUser()
     if (!user) {
       router.push('/login/SignIn')
     }
     setCurrentUser(user)
+
+    return () => {
+      controller.abort()
+    }
   }, [router])
 
   return (

@@ -1,16 +1,11 @@
 import { Bars3Icon, XCircleIcon } from '@heroicons/react/24/outline'
 import clsx from 'clsx'
-import { memo } from 'react'
 import { useDrag, useDrop } from 'react-dnd'
 import Select from 'react-select'
 
 import Button from '../../components/reuseable_components/Button'
 import Input from '../../components/reuseable_components/Input'
-import {
-  colourStatusStyles,
-  colourStyles,
-  dot,
-} from '../../hooks/ColourOptions'
+import { colourStatusStyles, colourStyles } from '../../hooks/ColourOptions'
 import { ItemTypes } from '../../types/itemTypes'
 
 type PrioritySelectProps = {
@@ -24,7 +19,8 @@ type PrioritySelectProps = {
   ColourOptionsStatus: any
   item: any
   setOpen: (open: boolean) => void
-  handleChange: (colourOptions: any) => void
+  updatePriority: (id: string, priority: string) => void
+  updateStatus: (id: string, status: string) => void
   todo: any
 }
 
@@ -44,8 +40,9 @@ export function PrioritySelect({
   colourOptions,
   item,
   setOpen,
-  handleChange,
   todo,
+  updatePriority,
+  updateStatus,
 }: PrioritySelectProps) {
   // @ts-ignore
   const originalIndex: number = findTodo(id).index
@@ -86,7 +83,7 @@ export function PrioritySelect({
       <div
         ref={(node) => drag(drop(node))}
         className={clsx(
-          'border-b-2 border-gray-300 m-10 p-5 flex flex-row justify-between',
+          'border-b-2 border-gray-300 mx-10 mt-2 p-5 flex flex-row justify-between',
           isDragging ? 'bg-gray-200 p-10 shadow-2xl' : 'bg-white'
         )}
       >
@@ -101,7 +98,9 @@ export function PrioritySelect({
           defaultValue={colourOptions[1]}
           options={colourOptions}
           styles={colourStyles}
-          onChange={handleChange}
+          onChange={(e) => {
+            updatePriority(item.id, e.label)
+          }}
           value={colourOptions.find((obj: any) => obj.value === todo)}
         />
 
@@ -109,6 +108,10 @@ export function PrioritySelect({
           defaultValue={ColourOptionsStatus[0]}
           options={ColourOptionsStatus}
           styles={colourStatusStyles}
+          onChange={(e) => {
+            updateStatus(item.id, e.label)
+          }}
+          value={ColourOptionsStatus.find((obj: any) => obj.value === todo)}
         />
 
         <Button

@@ -1,6 +1,6 @@
 import { PlusCircleIcon } from '@heroicons/react/24/outline'
 import update from 'immutability-helper'
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useDrop } from 'react-dnd'
 import { v4 as uuidv4 } from 'uuid'
 
@@ -27,49 +27,64 @@ export default function Todo() {
     { value: 'green', label: 'low Priority', color: '#36B37E' },
   ]
 
-  const [todo, setTodo] = useState<toDo[]>([])
-  const [open, setOpen] = useState(false)
-  const [todoItems, setTodoItems] = useState<any>([])
-  const [priority, setPriority] = useState(colourOptions[1].label)
-
-  const handleChange = (e: any) => {
-    //  gets the value of the selected option and sets it to todo
-    setPriority(e.label)
-  }
-
-  console.log('prority', priority)
-  console.log('todo', todo)
-
   const ColourOptionsStatus: readonly ColourOption[] = [
     { value: 'red', label: 'Not Started', color: '#FF5630', isFixed: true },
     { value: 'blue', label: 'in Progress', color: '#0052CC' },
     { value: 'green', label: 'Completed', color: '#36B37E' },
   ]
 
-  console.log(todo)
+  const [todos, setTodos] = useState<toDo[]>([])
+  const [todo, setTodo] = useState<string>()
+  const [open, setOpen] = useState(false)
+  const [todoItems, setTodoItems] = useState<any>([])
+  const [priority, setPriority] = useState(colourOptions[1].label)
+  const [status, setStatus] = useState(ColourOptionsStatus[0].label)
 
-  // addtodo
-  const addTodo = (e: any) => {
-    e.preventDefault()
-    setTodo([
-      ...todo,
-      {
-        id: id,
-        input: '',
-        priority: priority,
-        status: 'Not Started',
-      },
-    ])
+  console.log(todos)
+
+  const inputVale = useRef<HTMLInputElement>(null)
+
+  const updateStatus = (id: string, status: string) => {
+    const newTodo = clone(todos)
+    const todo = newTodo.find((todo: any) => todo.id === id)
+    todo.status = status
+    setTodos(newTodo)
   }
 
-  //  adds todo data to api
+  const updatePriority = (id: string, priority: string) => {
+    const newTodo = clone(todos)
+    const todo = newTodo.find((todo: any) => todo.id === id)
+    if (todo) {
+      todo.priority = priority
+    }
+    setTodos(newTodo)
+  }
+
+  // addtodo
+  const addTodo = useCallback(
+    (e: any) => {
+      e.preventDefault()
+      if (todo) {
+        const newTodo = {
+          id: id,
+          input: todo,
+          priority: priority,
+          status: status,
+        }
+        setTodos([...todos, newTodo])
+        inputVale.current!.value = ''
+      }
+    },
+    [todo, priority, status, todos, id]
+  )
+
   const addTodoToApi = async () => {
     const response = await fetch('http://localhost:3000/api/todo', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(todo),
+      body: JSON.stringify(todos),
     })
     const data = await response.json()
     console.log(data)
@@ -77,27 +92,28 @@ export default function Todo() {
 
   // Removes a todo item
   const removeTodo = (id: string) => {
-    const newValues = todo.filter((i) => i.id !== id)
-    setTodo(newValues)
+    const newValues = todos.filter((i) => i.id !== id)
+    setTodos(newValues)
     setOpen(false)
   }
 
+  // Drag and drop code
   const findTodo = useCallback(
     (id: string) => {
-      const card = todo.filter((c) => `${c.id}` === id)[0] as toDo
+      const card = todos.filter((c) => `${c.id}` === id)[0] as toDo
       return {
         card,
-        index: todo.indexOf(card),
+        index: todos.indexOf(card),
       }
     },
-    [todo]
+    [todos]
   )
 
   const moveTodo = useCallback(
     (id: string, atIndex: number) => {
       const { card, index } = findTodo(id)
-      setTodo(
-        update(todo, {
+      setTodos(
+        update(todos, {
           $splice: [
             [index, 1],
             [atIndex, 0, card],
@@ -105,7 +121,7 @@ export default function Todo() {
         })
       )
     },
-    [findTodo, todo, setTodo]
+    [findTodo, todos, setTodos]
   )
 
   const [, drop] = useDrop(() => ({ accept: ItemTypes.CARD }))
@@ -113,12 +129,27 @@ export default function Todo() {
   return (
     <div>
       <div className="border-b-2 border-gray-300 border-dashed m-10  flex flex-row justify-between">
-        <Button
-          text="Add Todo"
-          className="btn-green_text"
-          RightImage={PlusCircleIcon}
-          onClick={addTodo}
-        />
+        <div className="flex flex-row">
+          <input
+            className="border-b-2 border-gray-300 mr-2 p-2  mb-2  w-100"
+            type="text"
+            placeholder="Add a todo item"
+            onChange={(e) => setTodo(e.target.value)}
+            ref={inputVale}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                addTodo(e)
+              }
+            }}
+          />
+          <Button
+            text="Add Todo"
+            className="btn-green_text"
+            RightImage={PlusCircleIcon}
+            onClick={addTodo}
+          />
+        </div>
+
         <Button
           text="Save todo list"
           className="btn-blue mb-1 p-3"
@@ -127,7 +158,7 @@ export default function Todo() {
         />
       </div>
       <div ref={drop}>
-        {todo.map((item) => (
+        {todos.map((item) => (
           <PrioritySelect
             id={`${item.id}`}
             key={item.id}
@@ -135,23 +166,25 @@ export default function Todo() {
             setOpen={setOpen}
             colourOptions={colourOptions}
             ColourOptionsStatus={ColourOptionsStatus}
-            todo={todo}
+            todo={todos}
             moveTodo={moveTodo}
             findTodo={findTodo}
             setTodoItems={setTodoItems}
             input={item.input}
-            handleChange={handleChange}
+            updatePriority={updatePriority}
+            updateStatus={updateStatus}
             onChange={(e) => {
               // Clone so you don't mutate state.
-              const newTodos = clone(todo)
+              const newTodos = clone(todos)
               // Attempt to find the item
               const val = newTodos.find((v: any) => v.id === item.id)
               // Make sure it exists
               if (!val) return
               // Update
+
               val.input = e.target.value
-              val.priority = priority
-              setTodo(newTodos)
+
+              setTodos(newTodos)
             }}
           />
         ))}
